@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Untuk Hari Spesialmu ✨</title>
+    
+    <!-- Tailwind CSS untuk Styling Cepat & Responsif -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts untuk Tipografi yang Elegan -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- CUSTOM CSS FOR ADVANCED ANIMATIONS --- */
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #FAF6F0; /* Soft Warm Cream */
+            color: #2C2523; /* Dark Charcoal */
+        }
+
+        .font-romance {
+            font-family: 'Caveat', cursive;
+        }
+
+        /* Navigasi Transisi Halaman */
+        .page-transition {
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .page-hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px) scale(0.98);
+        }
+
+        .page-active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Desain Polaroid */
+        .polaroid-frame {
+            background-color: #FFFFFF;
+            padding: 12px 12px 24px 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            border: 1px solid #EFEAE2;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .polaroid-frame:hover {
+            transform: scale(1.03) rotate(0deg) !important;
+        }
+
+        /* Animasi Api Lilin */
+        .candle-flame {
+            width: 16px;
+            height: 28px;
+            background-color: #FFA447;
+            border-radius: 50% 50% 20% 20% / 60% 60% 40% 40%;
+            box-shadow: 0 0 15px #FFB057, 0 0 5px #FFA447 inset;
+            animation: flameWobble 0.15s ease-in-out infinite alternate;
+            transition: all 0.4s ease;
+        }
+
+        @keyframes flameWobble {
+            0% { transform: scale(1) rotate(-1.5deg); }
+            100% { transform: scale(1.06) rotate(1.5deg); }
+        }
+
+        .candle-body {
+            width: 12px;
+            height: 55px;
+            background: linear-gradient(to right, #E8A09A, #F3C5C1);
+            border-radius: 4px 4px 0 0;
+        }
+
+        /* Saat lilin mati */
+        .candle-extinguished .candle-flame {
+            opacity: 0;
+            transform: scale(0.1);
+            pointer-events: none;
+        }
+
+        /* Animasi Amplop Surat Cinta 3D */
+        .envelope-container {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            perspective: 1000px;
+        }
+
+        .envelope-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #E2B2AD;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.04);
+            z-index: 1;
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 105px solid #D19C97;
+            transform-origin: top;
+            transition: transform 0.5s ease-in-out;
+            z-index: 4;
+        }
+
+        .envelope-pocket {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 115px;
+            background-color: #E8A09A;
+            border-radius: 0 0 12px 12px;
+            z-index: 3;
+        }
+
+        .love-letter {
+            position: absolute;
+            bottom: 10px;
+            left: 15px;
+            width: 270px;
+            height: 175px;
+            background-color: #FFFFFF;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.02);
+            transition: transform 0.5s ease-in-out, z-index 0s 0.25s;
+            z-index: 2;
+        }
+
+        /* Saat amplop dibuka */
+        .envelope-container.is-open .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        .envelope-container.is-open .love-letter {
+            transform: translateY(-110px);
+            z-index: 5;
+            height: 250px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+        }
+    </style>
+</head>
+<body class="relative min-h-screen overflow-hidden flex flex-col justify-between items-center py-8 select-none">
+
+    <!-- Canvas Partikel (Latar Belakang Efek Hati / Konfeti) -->
+    <canvas id="canvasParticles" class="absolute inset-0 pointer-events-none z-10"></canvas>
+
+    <!-- Pemutar Audio Global (Lagu Bertema Perayaan & Ceria) -->
+    <audio id="celebrationMusic" loop>
+        <source src="Thank God I Found You - Daryl Ong lirik dan terjemahan bahasa indonesia.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Tombol Audio Melayang -->
+    <button id="btnMusicMute" class="fixed top-5 right-5 z-50 bg-white/90 backdrop-blur-md p-3.5 rounded-full shadow-lg border border-pink-100 hidden hover:scale-110 active:scale-95 transition-transform text-lg">
+        🎵
+    </button>
+
+    <!-- ================= KONTEN UTAMA: SYSTEM NAVIGASI HALAMAN ================= -->
+    <main class="relative w-full flex-grow flex items-center justify-center">
+
+        <!-- --- HALAMAN 1: SAMBUTAN (WELCOME) --- -->
+        <div id="page1" class="page-transition page-active px-4">
+            <div class="bg-white/85 backdrop-blur-md p-8 rounded-3xl shadow-xl border border-pink-50 max-w-sm w-full text-center">
+                <div class="text-6xl mb-5 animate-bounce">🎈</div>
+                <h1 class="text-3xl font-bold tracking-wide mb-3 text-stone-800">Halo Cantik...</h1>
+                <p class="text-sm text-stone-500 leading-relaxed mb-8">
+                    Aku sudah menyiapkan sebuah perjalanan kecil khusus untuk menyambut hari lahirmu hari ini. Siap untuk melangkah masuk?
+                </p>
+                <button id="btnStart" class="w-full py-4 bg-orange-200 hover:bg-orange-300 text-stone-800 font-semibold rounded-2xl shadow-md transform active:scale-95 transition-all">
+                    Buka Perjalanan ✨
+                </button>
+            </div>
+        </div>
+
+        <!-- --- HALAMAN 2: PERTANYAAN INTERAKTIF (DODGING NO) --- -->
+        <div id="page2" class="page-transition page-hidden px-4">
+            <div class="bg-white/85 backdrop-blur-md p-8 rounded-3xl shadow-xl border border-pink-50 max-w-sm w-full text-center relative">
+                <div class="text-5xl mb-4">🥺</div>
+                <h2 class="text-2xl font-semibold text-stone-800 mb-8">Apakah kamu sayang dan mencintai aku?</h2>
+                
+                <div id="buttonsWrapper" class="flex justify-center items-center gap-4 min-h-[60px] relative w-full">
+                    <button id="btnYes" class="px-8 py-3.5 bg-rose-400 hover:bg-rose-500 text-white font-semibold rounded-2xl shadow-md hover:scale-105 active:scale-95 transition-transform z-20">
+                        Iya, Sayang! 💕
+                    </button>
+                    <button id="btnNo" class="px-8 py-3.5 bg-stone-300 text-stone-700 font-semibold rounded-2xl shadow-md transition-all z-20">
+                        Nggak 😜
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- --- HALAMAN 3: PHOTO UTAMA & HAPPY BIRTHDAY --- -->
+        <div id="page3" class="page-transition page-hidden px-4">
+            <div class="flex flex-col items-center max-w-sm w-full text-center">
+                <h2 class="text-3xl font-bold tracking-wider text-rose-400 mb-6 font-romance text-4xl">Happy Birthday, Sayang! 🎉</h2>
+                
+                <!-- Bingkai Polaroid Utama -->
+                <div class="polaroid-frame bg-white rotate-2 mb-6 cursor-pointer">
+                    <div class="relative w-[240px] h-[240px] bg-stone-100 overflow-hidden rounded group">
+                        <img id="imgMain" src="2.jpeg" alt="Foto Utama" class="w-full h-full object-cover">
+                        <!-- Overlay Unggah -->
+                        <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span class="text-3xl mb-1">📸</span>
+                            <span class="text-xs font-semibold">Ubah Foto</span>
+                        </div>
+                        <input type="file" id="inputUploadMain" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer">
+                    </div>
+                    <p class="font-romance text-2xl mt-4 text-stone-500">Matahari di hari-hariku ☀️</p>
+                </div>
+
+                <p class="text-sm text-stone-500 leading-relaxed max-w-xs mb-8">
+                    "Selamat bertambah usia, Sayang. Semoga semua mimpi indahmu menjadi nyata, dan semoga aku bisa terus menemanimu di setiap langkah barumu."
+                </p>
+
+                <button id="btnGoToPage4" class="px-10 py-3.5 bg-rose-400 hover:bg-rose-500 text-white font-semibold rounded-2xl shadow-md active:scale-95 transition-all">
+                    Tiup Lilinnya 🎂
+                </button>
+            </div>
+        </div>
+
+        <!-- --- HALAMAN 4: TIUP LILIN INTERAKTIF --- -->
+        <div id="page4" class="page-transition page-hidden px-4">
+            <div class="flex flex-col items-center max-w-sm w-full text-center">
+                <h2 class="text-2xl font-bold text-stone-800 mb-2">Tiup Lilinnya! 🕯️</h2>
+                <p id="candleInstruction" class="text-xs text-stone-400 mb-10">Pikirkan satu keinginan, lalu sentuh apinya untuk ditiup...</p>
+
+                <!-- Animasi Area Lilin & Kue -->
+                <div class="flex flex-col items-center mb-10">
+                    <!-- Lilin Interaktif -->
+                    <div id="candleContainer" class="relative cursor-pointer group flex flex-col items-center">
+                        <div class="candle-flame"></div>
+                        <div class="candle-body -mt-0.5"></div>
+                    </div>
+                    
+                    <!-- Kue Sederhana Berpenampilan Premium -->
+                    <div class="w-[180px] h-[95px] bg-[#E2C2B9] rounded-t-2xl relative border-b-8 border-[#CDA397] shadow-inner mt-[-1px]">
+                        <!-- Garis Krim Atas Kue -->
+                        <div class="absolute top-2 left-0 right-0 h-4 bg-white/20"></div>
+                        <div class="absolute top-8 left-1/2 -translate-x-1/2 flex gap-1.5">
+                            <span class="w-2.5 h-2.5 rounded-full bg-rose-300"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-orange-300"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-amber-200"></span>
+                        </div>
+                    </div>
+                    <!-- Tatakan Kue -->
+                    <div class="w-[220px] h-3 bg-stone-300 rounded-full mt-[-2px]"></div>
+                </div>
+
+                <button id="btnGoToPage5" class="px-10 py-3.5 bg-stone-300 text-stone-400 font-semibold rounded-2xl shadow-md cursor-not-allowed transition-all" disabled>
+                    Lihat Kado Terakhir 🎁
+                </button>
+            </div>
+        </div>
+
+        <!-- --- HALAMAN 5: MEMORY GALLERY & SURAT CINTA 3D --- -->
+        <div id="page5" class="page-transition page-hidden px-4 pb-12 overflow-y-auto">
+            <div class="flex flex-col items-center max-w-md w-full text-center">
+                <h2 class="text-2xl font-bold text-rose-400 font-romance text-3xl mb-6">Our Sweet Memories 💞</h2>
+
+                <!-- Grid Galeri Foto -->
+                <div class="grid grid-cols-2 gap-4 mb-8 w-full max-w-xs">
+                    <!-- Frame 1 -->
+                    <div class="polaroid-frame bg-white -rotate-3 cursor-pointer">
+                        <div class="relative aspect-square bg-stone-100 overflow-hidden rounded group">
+                            <img id="imgMem1" src="14.jpeg" alt="Memori 1" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black/40 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="text-2xl">📸</span>
+                            </div>
+                            <input type="file" id="inputUploadMem1" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer">
+                        </div>
+                        <p class="font-romance text-base mt-2 text-stone-500">Bahagia Bareng</p>
+                    </div>
+
+                    <!-- Frame 2 -->
+                    <div class="polaroid-frame bg-white rotate-3 cursor-pointer">
+                        <div class="relative aspect-square bg-stone-100 overflow-hidden rounded group">
+                            <img id="imgMem2" src="syalalala.jpeg" alt="Memori 2" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black/40 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="text-2xl">📸</span>
+                            </div>
+                            <input type="file" id="inputUploadMem2" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer">
+                        </div>
+                        <p class="font-romance text-base mt-2 text-stone-500">Momen Indah</p>
+                    </div>
+                </div>
+
+                <!-- Amplop Surat Interaktif -->
+                <div id="envelopeContainer" class="envelope-container cursor-pointer mt-4">
+                    <div class="envelope-flap"></div>
+                    <div class="envelope-back"></div>
+                    <div class="love-letter flex flex-col items-center">
+                        <h3 class="font-bold text-rose-400 mb-2 font-romance text-2xl">Hai Sayangku,</h3>
+                        <div class="text-xs text-stone-500 leading-relaxed text-center overflow-y-auto max-h-[140px] px-1 select-text">
+                            Selamat ulang tahun ya. Aku sangat bersyukur bisa memilikimu di hidupku. Semoga di usiamu yang sekarang, kamu senantiasa dikelilingi kebaikan dan kebahagiaan. 
+                            Terima kasih karena sudah menjadi orang yang selalu sabar dan luar biasa di sampingku. Let's make more memories together! Aku sayang kamu selalu ❤️
+                        </div>
+                    </div>
+                    <div class="envelope-pocket"></div>
+                </div>
+                <p id="envelopeTip" class="text-[11px] text-stone-400 mt-6 animate-pulse">Tekan amplop untuk membuka surat cinta 💌</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer Terpadu -->
+    <footer class="w-full text-center text-[10px] text-stone-400 tracking-wide z-20 py-2">
+        Dibuat khusus untukmu dengan seluruh cinta ✨
+    </footer>
+
+
+    <!-- ================= JAVASCRIPT: INTERACTIVE ENGINE ================= -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            
+            // --- SELEKTOR ELEMEN ---
+            const celebrationMusic = document.getElementById("celebrationMusic");
+            const btnMusicMute = document.getElementById("btnMusicMute");
+            
+            const btnStart = document.getElementById("btnStart");
+            const btnYes = document.getElementById("btnYes");
+            const btnNo = document.getElementById("btnNo");
+            const btnGoToPage4 = document.getElementById("btnGoToPage4");
+            const btnGoToPage5 = document.getElementById("btnGoToPage5");
+            
+            const candleContainer = document.getElementById("candleContainer");
+            const candleInstruction = document.getElementById("candleInstruction");
+            const envelopeContainer = document.getElementById("envelopeContainer");
+            const envelopeTip = document.getElementById("envelopeTip");
+
+            // --- SISTEM NAVIGASI HALAMAN ---
+            function navigate(fromPageId, toPageId) {
+                const current = document.getElementById(fromPageId);
+                const target = document.getElementById(toPageId);
+                
+                if (current && target) {
+                    current.classList.remove("page-active");
+                    current.classList.add("page-hidden");
+                    
+                    setTimeout(() => {
+                        target.classList.remove("page-hidden");
+                        target.classList.add("page-active");
+                    }, 400);
+                }
+            }
+
+            // --- SISTEM AUDIO PERAYAAN ---
+            function triggerMusic() {
+                celebrationMusic.play().then(() => {
+                    btnMusicMute.classList.remove("hidden");
+                    btnMusicMute.innerText = "⏸️";
+                }).catch(() => {
+                    console.log("Musik dijeda oleh kebijakan browser. Harus diklik manual.");
+                });
+            }
+
+            btnMusicMute.addEventListener("click", () => {
+                if (celebrationMusic.paused) {
+                    celebrationMusic.play();
+                    btnMusicMute.innerText = "⏸️";
+                } else {
+                    celebrationMusic.pause();
+                    btnMusicMute.innerText = "▶️";
+                }
+            });
+
+            // Mulai Perjalanan
+            btnStart.addEventListener("click", () => {
+                triggerMusic();
+                navigate("page1", "page2");
+            });
+
+            // --- HALAMAN 2: LOGIKA TOMBOL 'TIDAK' MENGHINDAR ---
+            function dodge() {
+                const wrapper = document.getElementById("buttonsWrapper");
+                const rect = wrapper.getBoundingClientRect();
+
+                // Hitung koordinat batas agar tidak lari keluar kontainer halaman
+                const padding = 15;
+                const maxX = rect.width - btnNo.offsetWidth - padding;
+                const minX = padding;
+                const maxY = 150;
+                const minY = -150;
+
+                const randomX = Math.floor(Math.random() * (maxX - minX)) + minX;
+                const randomY = Math.floor(Math.random() * (maxY - minY)) + minY;
+
+                btnNo.style.position = "absolute";
+                btnNo.style.left = `${randomX}px`;
+                btnNo.style.top = `${randomY}px`;
+            }
+
+            btnNo.addEventListener("mouseover", dodge);
+            btnNo.addEventListener("touchstart", (e) => {
+                e.preventDefault();
+                dodge();
+            });
+
+            // Tombol "Ya" ditekan
+            btnYes.addEventListener("click", () => {
+                triggerParticleShower("heart");
+                setTimeout(() => {
+                    navigate("page2", "page3");
+                }, 1000);
+            });
+
+            // Lanjut ke Halaman 4
+            btnGoToPage4.addEventListener("click", () => {
+                navigate("page3", "page4");
+            });
+
+            // --- HALAMAN 4: TIUP LILIN ---
+            candleContainer.addEventListener("click", () => {
+                if (!candleContainer.classList.contains("candle-extinguished")) {
+                    candleContainer.classList.add("candle-extinguished");
+                    candleInstruction.innerText = "Kado terakhir sudah terbuka untukmu! ✨";
+                    candleInstruction.style.color = "#E8A09A";
+                    
+                    // Semburan konfeti warna-warni gembira
+                    triggerParticleShower("confetti");
+
+                    // Buka akses ke halaman terakhir
+                    btnGoToPage5.removeAttribute("disabled");
+                    btnGoToPage5.classList.remove("bg-stone-300", "text-stone-400", "cursor-not-allowed");
+                    btnGoToPage5.classList.add("bg-rose-400", "hover:bg-rose-500", "text-white");
+                }
+            });
+
+            // Lanjut ke Halaman 5
+            btnGoToPage5.addEventListener("click", () => {
+                navigate("page4", "page5");
+            });
+
+            // --- HALAMAN 5: BUKA AMPLOP SURAT ---
+            envelopeContainer.addEventListener("click", (e) => {
+                // Mencegah teks terpilih tidak sengaja memicu tutup halaman
+                if (e.target.tagName !== "TEXTAREA" && e.target.tagName !== "P" && e.target.tagName !== "H3") {
+                    envelopeContainer.classList.toggle("is-open");
+                    if (envelopeContainer.classList.contains("is-open")) {
+                        envelopeTip.innerText = "Surat cinta terbuka 💌";
+                    } else {
+                        envelopeTip.innerText = "Tekan amplop untuk membaca surat cinta 💌";
+                    }
+                }
+            });
+
+
+            // --- SISTEM UNGGAH FOTO INSTAN (REAL-TIME) ---
+            function createPhotoUploader(inputId, imgId) {
+                const uploader = document.getElementById(inputId);
+                const image = document.getElementById(imgId);
+                
+                if (uploader && image) {
+                    uploader.addEventListener("change", (e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = (event) => {
+                                image.src = event.target.result;
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                }
+            }
+
+            createPhotoUploader("inputUploadMain", "imgMain");
+            createPhotoUploader("inputUploadMem1", "imgMem1");
+            createPhotoUploader("inputUploadMem2", "imgMem2");
+
+
+            // ================= ANIMASI CANVAS SISTEM PARTIKEL =================
+            const canvas = document.getElementById("canvasParticles");
+            const ctx = canvas.getContext("2d");
+            let particles = [];
+            let animId = null;
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener("resize", resize);
+            resize();
+
+            class Particle {
+                constructor(x, y, type) {
+                    this.x = x;
+                    this.y = y;
+                    this.type = type;
+                    this.size = Math.random() * 10 + 6;
+                    this.speedX = Math.random() * 6 - 3;
+                    this.speedY = Math.random() * -8 - 4; // Bergerak ke atas saat semburan
+                    this.gravity = 0.2;
+                    this.opacity = 1;
+                    this.rotation = Math.random() * Math.PI;
+                    this.rotSpeed = Math.random() * 0.08 - 0.04;
+                    this.color = type === "heart"
+                        ? `hsla(${Math.random() * 20 + 340}, 100%, 75%, ` // Warna Pink lembut
+                        : `hsla(${Math.random() * 360}, 85%, 65%, `;  // Warna-warni Pesta
+                }
+
+                update() {
+                    this.x += this.speedX;
+                    this.speedY += this.gravity;
+                    this.y += this.speedY;
+                    this.opacity -= 0.012;
+                    this.rotation += this.rotSpeed;
+                }
+
+                draw() {
+                    ctx.save();
+                    ctx.translate(this.x, this.y);
+                    ctx.rotate(this.rotation);
+                    ctx.globalAlpha = this.opacity;
+
+                    if (this.type === "heart") {
+                        ctx.beginPath();
+                        ctx.moveTo(0, 0);
+                        ctx.bezierCurveTo(-this.size/2, -this.size/2, -this.size, -this.size/4, -this.size, this.size/4);
+                        ctx.bezierCurveTo(-this.size, this.size, 0, this.size * 1.5, 0, this.size * 1.8);
+                        ctx.bezierCurveTo(0, this.size * 1.5, this.size, this.size, this.size, this.size/4);
+                        ctx.bezierCurveTo(this.size, -this.size/4, this.size/2, -this.size/2, 0, 0);
+                        ctx.closePath();
+                        ctx.fillStyle = this.color + "1)";
+                        ctx.fill();
+                    } else {
+                        // Konfeti persegi panjang
+                        ctx.fillStyle = this.color + "1)";
+                        ctx.fillRect(-this.size/2, -this.size/4, this.size, this.size/2);
+                    }
+                    ctx.restore();
+                }
+            }
+
+            function loop() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                    particles[i].draw();
+                    if (particles[i].opacity <= 0) {
+                        particles.splice(i, 1);
+                        i--;
+                    }
+                }
+                if (particles.length > 0) {
+                    animId = requestAnimationFrame(loop);
+                } else {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    cancelAnimationFrame(animId);
+                }
+            }
+
+            function triggerParticleShower(type) {
+                particles = [];
+                const startX = canvas.width / 2;
+                const startY = canvas.height * 0.65;
+                
+                for (let i = 0; i < 75; i++) {
+                    particles.push(new Particle(startX, startY, type));
+                }
+                cancelAnimationFrame(animId);
+                loop();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+/* --- TEMA WARNA & VARIABLE --- */
+:root {
+    --bg-cream: #FAF6F0;       /* Warna dasar hangat */
+    --accent-pink: #E8A09A;    /* Dusty Rose yang manis namun elegan */
+    --accent-dark: #3E3636;    /* Abu-abu hangat tua untuk tulisan */
+    --candle-flame: #FFA62F;   /* Warna api lilin */
+}
+
+/* --- TATA LETAK & DASAR --- */
+body {
+    background-color: var(--bg-cream);
+    color: var(--accent-dark);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+/* Transisi Antar Halaman */
+.page-container {
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.page-container.hidden {
+    display: none;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.page-container.active-page {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Tombol Utama */
+.btn-primary {
+    background-color: var(--accent-pink);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+.btn-primary:hover {
+    background-color: #df918a;
+}
+
+/* Bingkai Foto Polaroid */
+.polaroid {
+    border-radius: 4px;
+    transition: transform 0.3s ease;
+}
+.polaroid:hover {
+    transform: scale(1.03) rotate(0deg) !important;
+}
+
+/* ================= ANIMASI KUE & LILIN (HALAMAN 4) ================= */
+.candle {
+    width: 14px;
+    height: 60px;
+    background: linear-gradient(to right, #F19E9E, #F8C4B4);
+    border-radius: 6px 6px 0 0;
+    z-index: 2;
+}
+
+.flame {
+    width: 18px;
+    height: 30px;
+    background-color: var(--candle-flame);
+    border-radius: 50% 50% 20% 20% / 60% 60% 40% 40%;
+    position: absolute;
+    top: -32px;
+    left: -2px;
+    box-shadow: 0 0 15px var(--candle-flame), 0 0 5px #ff5100 inset;
+    animation: flicker 0.15s ease-in-out infinite alternate;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+@keyframes flicker {
+    0% { transform: scale(1) rotate(-1deg); }
+    100% { transform: scale(1.08) rotate(1deg); }
+}
+
+/* Efek Lilin Padam */
+.candle.extinguished .flame {
+    opacity: 0;
+    transform: scale(0.1);
+    pointer-events: none;
+}
+
+.cake-body {
+    width: 180px;
+    height: 100px;
+    background-color: #E2C2B9; /* Krim Luar Kue */
+    border-radius: 12px 12px 0 0;
+    position: relative;
+    border-bottom: 8px solid #CDA397; /* Lapisan Selai */
+    box-shadow: inset 0 8px 0 rgba(255,255,255,0.2);
+}
+
+.cake-base {
+    width: 220px;
+    height: 14px;
+    background-color: #CBD5E1; /* Piring Tatakan Kue */
+    border-radius: 8px;
+    margin-top: -2px;
+}
+
+/* ================= ANIMASI SURAT / AMPLOP (HALAMAN 5) ================= */
+.envelope-wrapper {
+    position: relative;
+    width: 280px;
+    height: 200px;
+}
+
+.envelope {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: #F3C5C1; /* Warna Badan Amplop belakang */
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+/* Penutup Atas Amplop */
+.envelope .flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: 140px solid transparent;
+    border-right: 140px solid transparent;
+    border-top: 100px solid #EFA8A1;
+    transform-origin: top;
+    transition: transform 0.4s ease-in-out;
+    z-index: 3;
+}
+
+/* Sisi Kiri, Kanan & Depan Amplop */
+.envelope .pocket {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 110px;
+    background-color: #F8C4B4;
+    border-radius: 0 0 10px 10px;
+    z-index: 2;
+}
+
+/* Kartu Surat */
+.envelope .card {
+    position: absolute;
+    bottom: 10px;
+    left: 15px;
+    width: 250px;
+    height: 180px;
+    transition: transform 0.4s ease-in-out;
+    z-index: 1;
+}
+
+/* Animasi Membuka Amplop */
+.envelope.open .flap {
+    transform: rotateX(180deg);
+    z-index: 0;
+}
+
+.envelope.open .card {
+    transform: translateY(-90px);
+    z-index: 4;
+}
